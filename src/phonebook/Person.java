@@ -48,12 +48,15 @@ public class Person extends Phonebook
 		this.phoneNumber = phoneNumber;
 	}
 	
+	public void setAddress()
+	{
+		this.adr = new Address();
+	}
+	
 	public void setAddress(String street, String city, String state, int zipCode)
 	{
-		this.adr.setStreet(street);
-		this.adr.setCity(city);
-		this.adr.setState(state);
-		this.adr.setZipCode(zipCode);
+		Address t = new Address(street, city, state, zipCode);
+		this.adr = t;
 	}
 	
 //	GETTERS
@@ -67,6 +70,11 @@ public class Person extends Phonebook
 		return this.lastName;
 	}
 	
+	public String getFullName()
+	{
+		return this.firstName + " " + this.lastName;
+	}
+	
 	public String getPhoneNumber()
 	{
 		return this.phoneNumber;
@@ -75,5 +83,12 @@ public class Person extends Phonebook
 	public Address getAddress()
 	{
 		return this.adr;
+	}
+	
+//	TO STRING
+	@Override
+	public String toString()
+	{
+		return this.firstName + " " + this.lastName + ", " + this.adr + ", " + this.phoneNumber;
 	}
 }
