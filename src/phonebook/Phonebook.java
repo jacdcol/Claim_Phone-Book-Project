@@ -10,8 +10,9 @@ public class Phonebook extends Executive
 //	CONSTRUCTORS
 	public Phonebook()
 	{
-		this.length = 0;
-		this.parr = new Person[0];
+		this.length = 1;
+		this.parr = new Person[1];
+		this.parr[0] = null;
 	}
 	
 	public Phonebook(int length)
@@ -31,51 +32,97 @@ public class Phonebook extends Executive
 		this.parr[this.length] = add;
 	}
 	
+	public void testPopulate()
+	{
+		Person t1 = new Person("peter", "griffin", "1234567890", "100 rick ln", "detroit", "Arizona", 60102);
+		//pb = Phonebook(pb, t1);
+	}
+	
 //	METHODS
-	public void updateEntry(Person p)
+	public static Phonebook addEntry(Phonebook pb, Scanner in)
+	{
+		Person n = new Person();
+		
+		System.out.println("enter first name : ");
+			n.setFirstName(in.next());
+		System.out.println("enter last name : ");
+			n.setLastName(in.next());
+		System.out.println("enter phone number : ");
+			n.setPhoneNumber(in.next());
+		
+		n.setAddress(in); //POSSIBLY MOVE USER IN TO CONSTRUCTOR
+		/*System.out.println("enter street : ");
+			n.getAddress().setStreet(in.next());
+		System.out.println("enter city : ");
+			n.getAddress().setCity(in.next());
+		System.out.println("enter state : ");
+			n.getAddress().setState(in.next());
+		System.out.println("enter zip code : ");
+			n.getAddress().setZipCode(in.nextInt());
+		*/
+		if (pb.length == 1)
+		{
+			pb.parr[0] = n;
+		}
+		else
+		{
+			pb = new Phonebook(pb, n);
+		}
+		System.out.println(n + " has been added to the phone book");
+		return pb;
+	}
+	
+	public void updateEntry(String phoneNumber)
 	{
 		Scanner in = new Scanner(System.in);
-		System.out.println("Input number corresponding to what you would like to change\n"
-				+ "1) First Name\n2) Last Name\n3) Phone Number\n4) Address");
-		switch (in.nextInt())
-		{
-			case 1 : 
-				System.out.println("Please input desired first name : ");
-				p.setFirstName(in.next());
-				break;
-				
-			case 2 :
-				System.out.println("Please input desired last name : ");
-				p.setLastName(in.next());
-				break;
-				
-			case 3 :
-				System.out.println("Please input desired phone number : ");
-				p.setPhoneNumber(in.next());
-				break;
-				
-			case 4 :
-				System.out.println("Please input desired last name : ");
-				p.setLastName(in.next());
-				break;
-		}
 		
+		if (this.getEntry(phoneNumber) == null)
+		{
+			System.out.println("There is not an entry with this phone number in this phonebook");
+		}
+		else
+		{
+			System.out.println("Input number corresponding to what you would like to change\n"
+					+ "1) First Name\n2) Last Name\n3) Phone Number\n4) Address");
+			switch (in.nextInt())
+			{
+				case 1 : 
+					System.out.println("Please input desired first name : ");
+					this.getEntry(phoneNumber).setFirstName(in.next());
+					break;
+					
+				case 2 :
+					System.out.println("Please input desired last name : ");
+					this.getEntry(phoneNumber).setLastName(in.next());
+					break;
+					
+				case 3 :
+					System.out.println("Please input desired phone number : ");
+					this.getEntry(phoneNumber).setPhoneNumber(in.next());
+					break;
+					
+				case 4 :
+					System.out.println("Please input desired last name : ");
+					this.getEntry(phoneNumber).setLastName(in.next());
+					break;
+			}
+		}
 		in.close();
 	}
 	
-	public Phonebook removeEntry(Person p)
+	public Phonebook removeEntry(String phoneNumber)
 	{
 		Phonebook tpb = new Phonebook(this.length - 1);
 		int i = 0, j = 0;
 		while (j < this.parr.length)
 		{
-			if (this.parr[j] != p)
+			if (this.parr[j].getPhoneNumber().equals(phoneNumber))
 			{
-				tpb.parr[j++] = this.parr[i++];
+				i++;
 			}
 			else
 			{
-				i++;
+				tpb.parr[j++] = this.parr[i++];
 			}
 		}
 		return tpb;
@@ -182,6 +229,18 @@ public class Phonebook extends Executive
 	public int getLength()
 	{
 		return this.length;
+	}
+	
+	public Person getEntry(String phoneNumber)
+	{
+		for (int i = 0; i < this.getLength(); i++)
+		{
+			if (this.parr[i].getPhoneNumber().equals(phoneNumber))
+			{
+				return this.parr[i];
+			}
+		}
+		return null;
 	}
 	
 	public Person getEntry(int i)

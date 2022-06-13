@@ -11,40 +11,47 @@ public class Executive
 	public static void main(String[] args) 
 	{
 		Phonebook t1 = new Phonebook();
-		menu(t1);
+		Scanner in = new Scanner(System.in);
+		menu(t1, in);
+		in.close();
 	}
 
-	public static void menu(Phonebook pb)
+	public static void menu(Phonebook pb, Scanner in)
 	{
-		Scanner in = new Scanner(System.in);
 		boolean sentinel = true;
+		int choice = 0;
 		
 		try
 		{
 			while (sentinel)
 			{
-				System.out.println("*****PHONEBOOK*****\n\n1) Add new record\n2) Delete a record"
+				System.out.println("\n*****PHONEBOOK*****\n\n1) Add new record\n2) Delete a record"
 						+ "\n3) Search for an existing entry\n4) Update an existing entry"
 						+ "\n5) Show all records in ascending order\n6) Exit\n");
+				choice = in.nextInt();
 				
-				switch (in.nextInt())
+				switch (choice)
 				{
 //					add new record
 					case 1 : 
-						addEntry(pb);
+						pb = Phonebook.addEntry(pb, in);
 						break;
 					
 //					delete a record
-					case 2 : ;
+					case 2 :
+						System.out.println("Input phone number to delete record of : ");
+						pb = pb.removeEntry(in.next());
 						break;
 					
 //					search
 					case 3 : 
-						search(pb);
+						search(pb, in);
 						break;
 					
 //					update entry
-					case 4 : ;
+					case 4 :
+						System.out.println("Input phone number to update record of : ");
+						pb.updateEntry(in.next());
 						break;
 						
 //					show all
@@ -57,6 +64,10 @@ public class Executive
 						
 					default : throw new java.util.InputMismatchException();	
 				}
+				in.nextLine();
+				choice = 0;
+				System.out.println("Continue using phone book? (true / false) : ");
+				sentinel = in.nextBoolean();
 			}
 		}
 		catch(java.util.InputMismatchException e)
@@ -64,39 +75,11 @@ public class Executive
 			
 		}
 		
-		in.close();
+		
 	}
 	
-//	ADD ENTRY	
-	public static void addEntry(Phonebook pb)
+	public static void search(Phonebook pb, Scanner in)
 	{
-		Scanner in = new Scanner(System.in);
-		Person n = new Person();
-		System.out.println("enter first name : ");
-			n.setFirstName(in.next());
-		System.out.println("enter last name : ");
-			n.setLastName(in.next());
-		System.out.println("enter phone number : ");
-			n.setPhoneNumber(in.next());
-		
-		n.setAddress(); //POSSIBLY MOVE USER IN TO CONSTRUCTOR
-		System.out.println("enter street : ");
-			n.getAddress().setStreet(in.next());
-		System.out.println("enter city : ");
-			n.getAddress().setCity(in.next());
-		System.out.println("enter state : ");
-			n.getAddress().setState(in.next());
-		System.out.println("enter zip code : ");
-			n.getAddress().setZipCode(in.nextInt());
-		
-		pb = new Phonebook(pb, n);
-		selected = n;
-		in.close();
-	}
-	
-	public static void search(Phonebook pb)
-	{
-		Scanner in = new Scanner(System.in);
 		System.out.println("Search using...\n1) First name\n2) Last name\n3) Full name\n4) Phone number\n5) City\n6) State\n");
 		int choice = in.nextInt();
 		System.out.println("enter term to search by : ");
@@ -119,15 +102,13 @@ public class Executive
 			choice = in.nextInt();
 			if (choice == 1)
 			{
-				pb.updateEntry(selected);
+				pb.updateEntry(selected.getPhoneNumber());
 			}
 			else if (choice == 2)
 			{
-				pb = pb.removeEntry(selected);
+				pb = pb.removeEntry(selected.getPhoneNumber());
 				System.out.println(selected + " has been removed from phone book");
 			}
 		}
-		
-		in.close();
 	}
 }
