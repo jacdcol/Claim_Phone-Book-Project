@@ -2,11 +2,8 @@ package phonebook;
 
 import java.util.*;
 
-//	https://docs.google.com/document/d/1EVRzwlyxzhlAgko6NICkMpigJnDeX2Qk/edit?usp=sharing&ouid=110400127471324653037&rtpof=true&sd=true
-
 public class Executive 
 {
-	private static Person selected;
 	public static Phonebook t1;
 	
 	public static void main(String[] args) 
@@ -43,57 +40,66 @@ public class Executive
 		{
 			while (sentinel)
 			{
-				System.out.println("\n*****PHONEBOOK*****\n\n1) Add new record\n2) Delete a record"
-						+ "\n3) Search for an existing entry\n4) Update an existing entry"
-						+ "\n5) Show all records in ascending order\n6) Exit\n");
+				System.out.println("******** PHONEBOOK ********\n\t1) Add new record\n\t2) Delete a record"
+						+ "\n\t3) Search for an existing entry\n\t4) Update an existing entry"
+						+ "\n\t5) Show all records in ascending order\n\t6) Exit");
 				choice = in.nextInt();
 				
 				switch (choice)
 				{
 //					add new record
-					case 1 : 
-						t1 = Phonebook.addEntry(t1, in);
-						break;
+					case 1 :	t1.addEntry(in);
+								break;
 					
 //					delete a record
-					case 2 :
-						System.out.println("Input phone number to delete record of : ");
-						t1 = t1.removeEntry(in.next());
-						break;
+					case 2 :	System.out.println("Input phone number to delete record of : ");
+								t1.removeEntry(in.next());
+								break;
 					
 //					search
-					case 3 : 
-						search(in);
-						break;
+					case 3 :	search(in);
+								break;
 					
 //					update entry
-					case 4 :
-						System.out.println("Input phone number to update record of : ");
-						t1.updateEntry(in.next());
-						break;
+					case 4 :	System.out.println("Input phone number to update record of : ");
+								t1.updateEntry(in.next(), in);
+								break;
 						
 //					show all
-					case 5: ;
-						break;
+					case 5: 	t1.printAscending();
+								break;
 						
 //					exit
-					case 6: sentinel = false;
-						break;
+					case 6:		sentinel = false;
+								break;
 						
 					default : throw new java.util.InputMismatchException();	
 				}
 				in.nextLine();
+				if (choice != 6)
+				{
+					System.out.println("Continue using phone book? (true / false) : ");
+					sentinel = in.nextBoolean();
+				}
 				choice = 0;
-				System.out.println("Continue using phone book? (true / false) : ");
-				sentinel = in.nextBoolean();
 			}
 		}
 		catch(java.util.InputMismatchException e)
 		{
-			
+			System.out.println("Please make a valid choice from the menu");
+			in.nextLine();
 		}
 		
 		
+	}
+
+	public static void printAscending()
+	{
+		t1.sortPhoneBook();
+		for (int i = 0; i < t1.getLength(); i++)
+		{
+			System.out.println(t1.getEntry(i));
+		}
 	}
 	
 	public static void search(Scanner in)
@@ -108,25 +114,24 @@ public class Executive
 		System.out.println("Showing results for " + str + "...");
 		for (int i = 0; i < arr.length; i++)
 		{
-			System.out.println((i + 1) + ") " + arr[i]);
+			System.out.println("\t" + (i + 1) + ") " + arr[i]);
 		}
 		System.out.println("Select an entry by inputting its corresponding number, or enter 0 to return to main menu");
 		choice = in.nextInt() - 1;
 		
 		if ((choice > -1) && (choice < arr.length))
 		{
-			selected = arr[choice];
+			Person selected = arr[choice];
 			System.out.println("User has selected " + selected.getFullName() + 
-					"\nwould you like to...1) Update Entry\n2) Delete Entry\n3) Return to main menu");
+					"\nwould you like to.../n1) Update Entry\n2) Delete Entry\n3) Return to main menu");
 			choice = in.nextInt();
 			if (choice == 1)
 			{
-				t1.updateEntry(selected.getPhoneNumber());
+				t1.updateEntry(selected.getPhoneNumber(), in);
 			}
 			else if (choice == 2)
 			{
-				t1 = t1.removeEntry(selected.getPhoneNumber());
-				System.out.println(selected + " has been removed from phone book");
+				t1.removeEntry(selected.getPhoneNumber());
 			}
 		}
 	}

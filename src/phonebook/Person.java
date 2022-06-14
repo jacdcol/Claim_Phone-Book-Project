@@ -56,13 +56,13 @@ public class Person extends Phonebook
 		in.nextLine();
 		
 		System.out.println("enter street : ");
-		ad.setStreet(in.nextLine());
+			ad.setStreet(in.nextLine());
 		System.out.println("enter city : ");
-		ad.setCity(in.nextLine());
+			ad.setCity(in.nextLine());
 		System.out.println("enter state : ");
-		ad.setState(in.nextLine());
+			ad.setState(in.nextLine());
 		System.out.println("enter zip code : ");
-		ad.setZipCode(in.nextInt());
+			ad.setZipCode(in.nextInt());
 		this.adr = ad;
 	}
 	
@@ -102,6 +102,6 @@ public class Person extends Phonebook
 	@Override
 	public String toString()
 	{
-		return this.firstName + " " + this.lastName + ", " + this.adr + ", " + this.phoneNumber;
+		return this.firstName + " " + this.lastName + ", " + this.phoneNumber + ", " + this.adr;
 	}
 }

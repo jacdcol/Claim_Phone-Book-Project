@@ -1,5 +1,6 @@
 package phonebook;
 
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Phonebook extends Executive
@@ -14,11 +15,11 @@ public class Phonebook extends Executive
 		this.parr = new Person[0];
 	}
 	
-	public Phonebook(int length)
+	/*public Phonebook(int length)
 	{
 		this.length = length;
 		this.parr = new Person[this.length];
-	}
+	}*/
 	
 	public Phonebook(Phonebook pb, Person add)
 	{
@@ -29,38 +30,38 @@ public class Phonebook extends Executive
 			this.parr[i] = pb.parr[i];
 		}
 		this.parr[this.length - 1] = add;
-		
-		/*for (int i = 0; i < this.length; i++)
-		{
-			System.out.println(this.parr[i] + "\n");
-		}
-		System.out.println("\n");*/
 	}
 	
 //	METHODS
-	public static Phonebook addEntry(Phonebook pb, Scanner in)
+	public void addEntry(Scanner in)
 	{
 		Person n = new Person();
-		
+		Person[] arr = new Person[this.length + 1];
+
 		System.out.println("enter first name : ");
 			n.setFirstName(in.next());
 		System.out.println("enter last name : ");
 			n.setLastName(in.next());
 		System.out.println("enter phone number : ");
 			n.setPhoneNumber(in.next());
-		
-		n.setAddress(in);
-		
-		pb = new Phonebook(pb, n);
-		
+			n.setAddress(in);
+
+		for (int i = 0; i < this.length; i++)
+		{
+			arr[i] = this.parr[i];
+		}
+		arr[this.length++] = n;
+		this.parr = arr;
 		System.out.println(n + " has been added to the phone book");
-		return pb;
+	}
+
+	public void sortPhoneBook()
+	{
+		Arrays.sort(this.parr);
 	}
 	
-	public void updateEntry(String phoneNumber)
+	public void updateEntry(String phoneNumber, Scanner in)
 	{
-		Scanner in = new Scanner(System.in);
-		
 		if (this.getEntry(phoneNumber) == null)
 		{
 			System.out.println("There is not an entry with this phone number in this phonebook");
@@ -69,35 +70,63 @@ public class Phonebook extends Executive
 		{
 			System.out.println("Input number corresponding to what you would like to change\n"
 					+ "1) First Name\n2) Last Name\n3) Phone Number\n4) Address");
-			switch (in.nextInt())
-			{
-				case 1 : 
+			switch (in.nextInt()) {
+				case 1 ->
+				{
 					System.out.println("Please input desired first name : ");
 					this.getEntry(phoneNumber).setFirstName(in.next());
-					break;
-					
-				case 2 :
+				}
+				case 2 ->
+				{
 					System.out.println("Please input desired last name : ");
 					this.getEntry(phoneNumber).setLastName(in.next());
-					break;
-					
-				case 3 :
+				}
+				case 3 ->
+				{
 					System.out.println("Please input desired phone number : ");
-					this.getEntry(phoneNumber).setPhoneNumber(in.next());
-					break;
-					
-				case 4 :
-					System.out.println("Please input desired last name : ");
-					this.getEntry(phoneNumber).setLastName(in.next());
-					break;
+					String pn = in.next();
+					this.getEntry(phoneNumber).setPhoneNumber(pn);
+					phoneNumber = pn;
+				}
+				case 4 ->
+				{
+					System.out.println("Which part of this entry's address would you like to update? : ");
+					System.out.println("\t1) Street\n\t2) City\n\t3) State\n\t4) Zip Code");
+					switch (in.nextInt())
+					{
+						case 1 ->
+						{
+							in.nextLine();
+							System.out.println("Please enter desired street address : ");
+							this.getEntry(phoneNumber).getAddress().setStreet(in.nextLine());
+						}
+						case 2 ->
+						{
+							in.nextLine();
+							System.out.println("Please enter desired city : ");
+							this.getEntry(phoneNumber).getAddress().setCity(in.nextLine());
+						}
+						case 3 ->
+						{
+							in.nextLine();
+							System.out.println("Please enter desired state : ");
+							this.getEntry(phoneNumber).getAddress().setState(in.nextLine());
+						}
+						case 4 ->
+						{
+							System.out.println("Please enter desired zip code : ");
+							this.getEntry(phoneNumber).getAddress().setZipCode(in.nextInt());
+						}
+					}
+				}
 			}
+			System.out.println("Entry has been successfully updated, and now reads :\n\t" + this.getEntry(phoneNumber));
 		}
-		in.close();
 	}
 	
-	public Phonebook removeEntry(String phoneNumber)
+	public void removeEntry(String phoneNumber)
 	{
-		Phonebook tpb = new Phonebook(this.length - 1);
+		Person[] arr = new Person[this.length - 1];
 		int i = 0, j = 0;
 		while (j < this.parr.length)
 		{
@@ -107,10 +136,12 @@ public class Phonebook extends Executive
 			}
 			else
 			{
-				tpb.parr[j++] = this.parr[i++];
+				arr[j++] = this.parr[i++];
 			}
 		}
-		return tpb;
+		System.out.println(this.getEntry(phoneNumber) + " has been removed from the phonebook");
+		this.parr = arr;
+		this.length--;
 	}
 	
 	public Person[] search(int mode, String str)
@@ -119,7 +150,7 @@ public class Phonebook extends Executive
 		{
 			if((mode >= 1) && (mode <= 6))
 			{
-				String searched = "";
+				StringBuilder searched = new StringBuilder();
 				int count = 0;
 				str = str.toLowerCase();
 				switch (mode)
@@ -131,7 +162,7 @@ public class Phonebook extends Executive
 							System.out.println(this.parr[i].getFirstName());
 							if (str.equals(this.parr[i].getFirstName().toLowerCase()))
 							{
-								searched += (i + ", ");
+								searched.append(i).append(", ");
 								System.out.println(i + ", " + this.parr[i]);
 								count++;
 							}
@@ -144,7 +175,7 @@ public class Phonebook extends Executive
 						{
 							if (str.equals(this.parr[i].getLastName().toLowerCase()))
 							{
-								searched += (i + ", ");
+								searched.append(i).append(", ");
 								count++;
 							}
 						}
@@ -155,7 +186,7 @@ public class Phonebook extends Executive
 						{
 							if (str.equals((this.parr[i].getFirstName() + " " + this.parr[i].getLastName()).toLowerCase()))
 							{
-								searched += (i + ", ");
+								searched.append(i).append(", ");
 								count++;
 							}
 						}
@@ -166,7 +197,7 @@ public class Phonebook extends Executive
 						{
 							if (str.equals(this.parr[i].getPhoneNumber().toLowerCase()))
 							{
-								searched += (i + ", ");
+								searched.append(i).append(", ");
 								count++;
 							}
 						}
@@ -177,7 +208,7 @@ public class Phonebook extends Executive
 						{
 							if(str.equals(this.parr[i].getAddress().getCity().toLowerCase()))
 							{
-								searched += (i + ", ");
+								searched.append(i).append(", ");
 								count++;
 							}
 						}
@@ -188,7 +219,7 @@ public class Phonebook extends Executive
 						{
 							if(str.equals(this.parr[i].getAddress().getState().toLowerCase()))
 							{
-								searched += (i + ", ");
+								searched.append(i).append(", ");
 								count++;
 							}
 						}
@@ -197,8 +228,8 @@ public class Phonebook extends Executive
 				Person[] arr = new Person[count];
 				for (int i = 0; i < count; i++)
 				{
-					arr[i] = this.parr[Integer.valueOf(searched.substring(0, searched.indexOf(',')))];
-					searched = searched.substring(searched.indexOf(',') + 2);
+					arr[i] = this.parr[Integer.parseInt(searched.substring(0, searched.toString().indexOf(',')))];
+					searched = new StringBuilder(searched.substring(searched.toString().indexOf(',') + 2));
 				}
 				return arr;
 			}
