@@ -17,23 +17,6 @@ public class Person extends Phonebook
 		this.phoneNumber = "";
 		this.adr = null;
 	}
-	
-	public Person(Scanner in) 
-	{
-		/*
-		//Scanner in = new Scanner(System.in);
-		//Person n = new Person();
-		System.out.println("enter first name : ");
-			this.firstName = in.next();
-		System.out.println("enter last name : ");
-		this.lastName = in.next();
-		System.out.println("enter phone number : ");
-			this.phoneNumber = in.next();
-		//this.adr = new Address();
-		this.adr.setAddress(in);
-		//in.close();
-		 * */
-	}
 
 	/*public Person(String firstName, String lastName, String phoneNumber)
 	{

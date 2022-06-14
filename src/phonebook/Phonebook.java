@@ -10,9 +10,8 @@ public class Phonebook extends Executive
 //	CONSTRUCTORS
 	public Phonebook()
 	{
-		this.length = 1;
-		this.parr = new Person[1];
-		this.parr[0] = null;
+		this.length = 0;
+		this.parr = new Person[0];
 	}
 	
 	public Phonebook(int length)
@@ -29,13 +28,13 @@ public class Phonebook extends Executive
 		{
 			this.parr[i] = pb.parr[i];
 		}
-		this.parr[this.length] = add;
-	}
-	
-	public void testPopulate()
-	{
-		Person t1 = new Person("peter", "griffin", "1234567890", "100 rick ln", "detroit", "Arizona", 60102);
-		//pb = Phonebook(pb, t1);
+		this.parr[this.length - 1] = add;
+		
+		/*for (int i = 0; i < this.length; i++)
+		{
+			System.out.println(this.parr[i] + "\n");
+		}
+		System.out.println("\n");*/
 	}
 	
 //	METHODS
@@ -50,24 +49,10 @@ public class Phonebook extends Executive
 		System.out.println("enter phone number : ");
 			n.setPhoneNumber(in.next());
 		
-		n.setAddress(in); //POSSIBLY MOVE USER IN TO CONSTRUCTOR
-		/*System.out.println("enter street : ");
-			n.getAddress().setStreet(in.next());
-		System.out.println("enter city : ");
-			n.getAddress().setCity(in.next());
-		System.out.println("enter state : ");
-			n.getAddress().setState(in.next());
-		System.out.println("enter zip code : ");
-			n.getAddress().setZipCode(in.nextInt());
-		*/
-		if (pb.length == 1)
-		{
-			pb.parr[0] = n;
-		}
-		else
-		{
-			pb = new Phonebook(pb, n);
-		}
+		n.setAddress(in);
+		
+		pb = new Phonebook(pb, n);
+		
 		System.out.println(n + " has been added to the phone book");
 		return pb;
 	}
@@ -132,29 +117,32 @@ public class Phonebook extends Executive
 	{
 		try
 		{
-			if((mode >= 0) && (mode <= 2))
+			if((mode >= 1) && (mode <= 6))
 			{
 				String searched = "";
 				int count = 0;
+				str = str.toLowerCase();
 				switch (mode)
 				{
 //					FIRST NAME
-					case (0) : 
-						for (int i = 0; i < this.length; i++)
+					case 1 : 
+						for (int i = 0; i < this.parr.length; i++)
 						{
-							if (str.equals(this.parr[i].getFirstName()))
+							System.out.println(this.parr[i].getFirstName());
+							if (str.equals(this.parr[i].getFirstName().toLowerCase()))
 							{
 								searched += (i + ", ");
+								System.out.println(i + ", " + this.parr[i]);
 								count++;
 							}
 						}
 						
 						break;
 //					LAST NAME
-					case (1) :
+					case 2 :
 						for (int i = 0; i < this.length; i++)
 						{
-							if (str.equals(this.parr[i].getLastName()))
+							if (str.equals(this.parr[i].getLastName().toLowerCase()))
 							{
 								searched += (i + ", ");
 								count++;
@@ -162,10 +150,10 @@ public class Phonebook extends Executive
 						}
 						break;
 //					FULL NAME
-					case (2) :
+					case 3 :
 						for (int i = 0; i < this.length; i++)
 						{
-							if (str.equals(this.parr[i].getFirstName() + " " + this.parr[i].getLastName()))
+							if (str.equals((this.parr[i].getFirstName() + " " + this.parr[i].getLastName()).toLowerCase()))
 							{
 								searched += (i + ", ");
 								count++;
@@ -173,10 +161,10 @@ public class Phonebook extends Executive
 						}
 						break;
 //					PHONE NUMBER
-					case (3) : 
+					case 4 : 
 						for (int i = 0; i < this.length; i++)
 						{
-							if (str.equals(this.parr[i].getPhoneNumber()))
+							if (str.equals(this.parr[i].getPhoneNumber().toLowerCase()))
 							{
 								searched += (i + ", ");
 								count++;
@@ -184,10 +172,10 @@ public class Phonebook extends Executive
 						}
 						break;
 //					CITY
-					case 4 :
+					case 5 :
 						for (int i = 0; i < this.length; i++)
 						{
-							if(str.equals(this.parr[i].getAddress().getCity()))
+							if(str.equals(this.parr[i].getAddress().getCity().toLowerCase()))
 							{
 								searched += (i + ", ");
 								count++;
@@ -195,10 +183,10 @@ public class Phonebook extends Executive
 						}
 						break;
 //					STATE
-					case 5 :
+					case 6 :
 						for (int i = 0; i < this.length; i++)
 						{
-							if(str.equals(this.parr[i].getAddress().getState()))
+							if(str.equals(this.parr[i].getAddress().getState().toLowerCase()))
 							{
 								searched += (i + ", ");
 								count++;
@@ -221,6 +209,7 @@ public class Phonebook extends Executive
 		}
 		catch(java.util.InputMismatchException e)
 		{
+			System.out.println("search function not reached");
 			return null;
 		}
 	}
@@ -229,6 +218,11 @@ public class Phonebook extends Executive
 	public int getLength()
 	{
 		return this.length;
+	}
+	
+	public Person getEntry(int i)
+	{
+		return this.parr[i];
 	}
 	
 	public Person getEntry(String phoneNumber)
@@ -241,10 +235,5 @@ public class Phonebook extends Executive
 			}
 		}
 		return null;
-	}
-	
-	public Person getEntry(int i)
-	{
-		return this.parr[i];
 	}
 }
