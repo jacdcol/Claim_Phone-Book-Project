@@ -7,121 +7,173 @@ public class Phonebook extends Executive
 	private int length;
 	private Person[] parr;
 	
-//	CONSTRUCTORS
 	public Phonebook()
 	{
 		this.length = 0;
 		this.parr = new Person[0];
 	}
 	
-	/*public Phonebook(int length)
-	{
-		this.length = length;
-		this.parr = new Person[this.length];
-	}*/
-	
 	public Phonebook(Phonebook pb, Person add)
 	{
 		this.length = pb.length + 1;
 		this.parr = new Person[this.length];
-		for (int i = 0; i < pb.length; i++)
-		{
-			this.parr[i] = pb.parr[i];
-		}
+		if (pb.length >= 0) System.arraycopy(pb.parr, 0, this.parr, 0, pb.length);
 		this.parr[this.length - 1] = add;
 	}
 	
-//	METHODS
 	public void addEntry(Scanner in)
 	{
 		Person n = new Person();
 		Person[] arr = new Person[this.length + 1];
+		in.nextLine();
 
 		System.out.println("enter first name : ");
-			n.setFirstName(in.next());
+		n.setFirstName(in.nextLine());
 		System.out.println("enter last name : ");
-			n.setLastName(in.next());
+		n.setLastName(in.nextLine());
 		System.out.println("enter phone number : ");
-			n.setPhoneNumber(in.next());
-			n.setAddress(in);
-
-		for (int i = 0; i < this.length; i++)
+		String pn = "";
+		do
 		{
-			arr[i] = this.parr[i];
-		}
+			try
+			{
+				pn = in.nextLine();
+				if (pn.length() == 10)
+				{
+					n.setPhoneNumber(pn);
+				}
+				else
+				{
+					throw new java.util.InputMismatchException();
+				}
+			}
+			catch (java.util.InputMismatchException k)
+			{
+				System.out.println("please enter a valid 10 digit phone number");
+			}
+		}while (pn.length() != 10);
+
+		n.setAddress(in);
+
+		if (this.length >= 0) System.arraycopy(this.parr, 0, arr, 0, this.length);
 		arr[this.length++] = n;
 		this.parr = arr;
 		System.out.println(n + " has been added to the phone book");
 	}
 
-	public void sortPhoneBook()
+	public void removeEntry(String phoneNumber)
 	{
-		//Arrays.sort(this.parr);
-		int longest = 0;
-		for (int i = 0; i < this.length; i++)
+		Person[] arr = new Person[this.length - 1];
+		int i = 0, j = 0;
+		while (j < this.parr.length)
 		{
-			if (this.parr[i].getFullName().length() > longest)
+			if (this.parr[j].getPhoneNumber().equals(phoneNumber))
 			{
-				longest = this.parr[i].getFullName().length();
+				j++;
+			}
+			else
+			{
+				arr[i++] = this.parr[j++];
 			}
 		}
-		
-		int arr[][] = new int[this.length][longest];
-		//int fArr[][] = new int[this.length][longest];
-		for (int i = 0; i < this.length; i++)
-		{
-			char[] carr = this.parr[i].getFullName().toLowerCase().toCharArray();
-			for (int j = 0; j < carr.length; j++)
-			{
-				arr[i][j] = (int)carr[j];
-			}
-		}
-		
-		arr = recSort(arr, 0, 1, 0);
-		
-		for (int i = 0; i < arr.length; i++)
-		{
-			for (int j = 0; j < arr[i].length; j++)
-			{
-				System.out.print(arr[i][j] + " ");
-			}
-			System.out.println();
-		}
-		
-		/*
-		
-		for (int i = 0; i < this.length; i++)
-		{
-			
-		}*/
+		System.out.println(this.getEntry(phoneNumber).getFullName() + " has been removed from the phonebook");
+		this.parr = arr;
+		this.length--;
 	}
-	
-	public int[][] recSort(int[][] arr, int i, int j, int k)
+
+	public Person[] search(int mode, String str)
 	{
-		System.out.println(i + " " + j + " " + k);
-		if (i + 1 == arr.length)
+		try
 		{
-			return arr;
+			if((mode >= 1) && (mode <= 6))
+			{
+				StringBuilder searched = new StringBuilder();
+				int count = 0;
+				str = str.toLowerCase();
+				switch (mode)
+				{
+					case 1 :
+						for (int i = 0; i < this.parr.length; i++)
+						{
+							if (this.parr[i].getFirstName().toLowerCase().contains(str))
+							{
+								searched.append(i).append(", ");
+								count++;
+							}
+						}
+
+						break;
+					case 2 :
+						for (int i = 0; i < this.length; i++)
+						{
+							if (this.parr[i].getLastName().toLowerCase().contains(str))
+							{
+								searched.append(i).append(", ");
+								count++;
+							}
+						}
+						break;
+					case 3 :
+						for (int i = 0; i < this.length; i++)
+						{
+							if (((this.parr[i].getFirstName() + " " + this.parr[i].getLastName()).toLowerCase()).contains(str))
+							{
+								searched.append(i).append(", ");
+								count++;
+							}
+						}
+						break;
+					case 4 :
+						for (int i = 0; i < this.length; i++)
+						{
+							if ((this.parr[i].getPhoneNumber().toLowerCase()).contains(str))
+							{
+								searched.append(i).append(", ");
+								count++;
+							}
+						}
+						break;
+					case 5 :
+						for (int i = 0; i < this.length; i++)
+						{
+							if ((this.parr[i].getAddress().getCity().toLowerCase()).contains(str))
+							{
+								searched.append(i).append(", ");
+								count++;
+							}
+						}
+						break;
+					case 6 :
+						for (int i = 0; i < this.length; i++)
+						{
+							if ((this.parr[i].getAddress().getState().toLowerCase()).contains(str))
+							{
+								searched.append(i).append(", ");
+								count++;
+							}
+						}
+						break;
+				}
+				Person[] arr = new Person[count];
+				for (int i = 0; i < count; i++)
+				{
+					arr[i] = this.parr[Integer.parseInt(searched.substring(0, searched.toString().indexOf(',')))];
+					searched = new StringBuilder(searched.substring(searched.toString().indexOf(',') + 2));
+				}
+				return arr;
+			}
+			else
+			{
+				throw new java.util.InputMismatchException();
+			}
 		}
-		else if (arr[j][k] < arr[i][k])
+		catch(java.util.InputMismatchException e)
 		{
-			int[] temp = arr[i];
-			arr[i] = arr[j];
-			arr[j] = temp;
-			return recSort(arr, i, ++j, 0);
+			System.out.println("search function not reached");
+			return null;
 		}
-		else if (arr[i + 1][j] == arr[i][j])
-		{
-			return recSort(arr, i, j, ++k);
-		}
-		else
-		{
-			return recSort(arr, ++i, 0, 0);
-		}
-		
-		//return arr;
 	}
-	
+
 	public void updateEntry(String phoneNumber, Scanner in)
 	{
 		if (this.getEntry(phoneNumber) == null)
@@ -146,8 +198,26 @@ public class Phonebook extends Executive
 				case 3 ->
 				{
 					System.out.println("Please input desired phone number : ");
-					String pn = in.next();
-					this.getEntry(phoneNumber).setPhoneNumber(pn);
+					String pn = "";
+					do
+					{
+						try
+						{
+							pn = in.nextLine();
+							if (pn.length() == 10)
+							{
+								this.getEntry(phoneNumber).setPhoneNumber(pn);
+							}
+							else
+							{
+								throw new java.util.InputMismatchException();
+							}
+						}
+						catch (java.util.InputMismatchException h)
+						{
+							System.out.println("please enter a valid 10 digit phone number");
+						}
+					}while (pn.length() != 10);
 					phoneNumber = pn;
 				}
 				case 4 ->
@@ -176,8 +246,9 @@ public class Phonebook extends Executive
 						}
 						case 4 ->
 						{
+							in.nextLine();
 							System.out.println("Please enter desired zip code : ");
-							this.getEntry(phoneNumber).getAddress().setZipCode(in.nextInt());
+							this.getEntry(phoneNumber).getAddress().setZipCode(in.nextLine());
 						}
 					}
 				}
@@ -185,129 +256,30 @@ public class Phonebook extends Executive
 			System.out.println("Entry has been successfully updated, and now reads :\n\t" + this.getEntry(phoneNumber));
 		}
 	}
-	
-	public void removeEntry(String phoneNumber)
+
+	public void sortPhoneBook()
 	{
-		Person[] arr = new Person[this.length - 1];
-		int i = 0, j = 0;
-		while (j < this.parr.length)
+		String[] strArr = new String[this.length];
+		for (int i = 0; i < this.length; i++)
 		{
-			if (this.parr[j].getPhoneNumber().equals(phoneNumber))
-			{
-				i++;
-			}
-			else
-			{
-				arr[j++] = this.parr[i++];
-			}
+			strArr[i] = this.parr[i].getFullName().toLowerCase();
 		}
-		System.out.println(this.getEntry(phoneNumber) + " has been removed from the phonebook");
-		this.parr = arr;
-		this.length--;
-	}
-	
-	public Person[] search(int mode, String str)
-	{
-		try
+
+		Arrays.sort(strArr);
+		for (int i = 0; i < this.length; i++)
 		{
-			if((mode >= 1) && (mode <= 6))
+			for (int j = 0; j < this.length; j++)
 			{
-				StringBuilder searched = new StringBuilder();
-				int count = 0;
-				str = str.toLowerCase();
-				switch (mode)
+				if (strArr[i].equals(this.parr[j].getFullName().toLowerCase()))
 				{
-//					FIRST NAME
-					case 1 : 
-						for (int i = 0; i < this.parr.length; i++)
-						{
-							System.out.println(this.parr[i].getFirstName());
-							if (str.equals(this.parr[i].getFirstName().toLowerCase()))
-							{
-								searched.append(i).append(", ");
-								System.out.println(i + ", " + this.parr[i]);
-								count++;
-							}
-						}
-						
-						break;
-//					LAST NAME
-					case 2 :
-						for (int i = 0; i < this.length; i++)
-						{
-							if (str.equals(this.parr[i].getLastName().toLowerCase()))
-							{
-								searched.append(i).append(", ");
-								count++;
-							}
-						}
-						break;
-//					FULL NAME
-					case 3 :
-						for (int i = 0; i < this.length; i++)
-						{
-							if (str.equals((this.parr[i].getFirstName() + " " + this.parr[i].getLastName()).toLowerCase()))
-							{
-								searched.append(i).append(", ");
-								count++;
-							}
-						}
-						break;
-//					PHONE NUMBER
-					case 4 : 
-						for (int i = 0; i < this.length; i++)
-						{
-							if (str.equals(this.parr[i].getPhoneNumber().toLowerCase()))
-							{
-								searched.append(i).append(", ");
-								count++;
-							}
-						}
-						break;
-//					CITY
-					case 5 :
-						for (int i = 0; i < this.length; i++)
-						{
-							if(str.equals(this.parr[i].getAddress().getCity().toLowerCase()))
-							{
-								searched.append(i).append(", ");
-								count++;
-							}
-						}
-						break;
-//					STATE
-					case 6 :
-						for (int i = 0; i < this.length; i++)
-						{
-							if(str.equals(this.parr[i].getAddress().getState().toLowerCase()))
-							{
-								searched.append(i).append(", ");
-								count++;
-							}
-						}
-						break;
+					Person tmp = this.parr[i];
+					this.parr[i] = this.parr[j];
+					this.parr[j] = tmp;
 				}
-				Person[] arr = new Person[count];
-				for (int i = 0; i < count; i++)
-				{
-					arr[i] = this.parr[Integer.parseInt(searched.substring(0, searched.toString().indexOf(',')))];
-					searched = new StringBuilder(searched.substring(searched.toString().indexOf(',') + 2));
-				}
-				return arr;
 			}
-			else
-			{
-				throw new java.util.InputMismatchException();
-			}
-		}
-		catch(java.util.InputMismatchException e)
-		{
-			System.out.println("search function not reached");
-			return null;
 		}
 	}
 	
-//	GETTERS
 	public int getLength()
 	{
 		return this.length;

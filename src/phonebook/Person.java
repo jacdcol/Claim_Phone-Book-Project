@@ -17,22 +17,14 @@ public class Person extends Phonebook
 		this.phoneNumber = "";
 		this.adr = null;
 	}
-
-	/*public Person(String firstName, String lastName, String phoneNumber)
-	{
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.phoneNumber = phoneNumber;
-		this.adr = new Address();
-	}*/
 	
-	public Person(String firstName, String lastName, String phoneNumber, String street, String city, String state, int zipCode)
+	/*public Person(String firstName, String lastName, String phoneNumber, String street, String city, String state, String zipCode)
 	{
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.phoneNumber = phoneNumber;
 		this.adr = new Address(street, city, state, zipCode);
-	}
+	}*/
 	
 //	SETTERS
 	public void setFirstName(String firstName)
@@ -53,7 +45,7 @@ public class Person extends Phonebook
 	public void setAddress(Scanner in)
 	{
 		Address ad = new Address();
-		in.nextLine();
+		//in.nextLine();
 		
 		System.out.println("enter street : ");
 			ad.setStreet(in.nextLine());
@@ -62,7 +54,7 @@ public class Person extends Phonebook
 		System.out.println("enter state : ");
 			ad.setState(in.nextLine());
 		System.out.println("enter zip code : ");
-			ad.setZipCode(in.nextInt());
+			ad.setZipCode(in.nextLine());
 		this.adr = ad;
 	}
 	
@@ -102,6 +94,7 @@ public class Person extends Phonebook
 	@Override
 	public String toString()
 	{
-		return this.firstName + " " + this.lastName + ", " + this.phoneNumber + ", " + this.adr;
+		return this.firstName + " " + this.lastName + " | " + this.adr + " | (" + this.phoneNumber.substring(0, 3)
+				+ ") " + this.phoneNumber.substring(3, 6) + "-" + this.phoneNumber.substring(6, 10);
 	}
 }

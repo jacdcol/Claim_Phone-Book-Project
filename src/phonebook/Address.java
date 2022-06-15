@@ -5,7 +5,7 @@ public class Address extends Person
 	private String street;
 	private String city;
 	private String state;
-	private int zipCode;
+	private String zipCode;
 	
 //	CONSTRUCTORS	
 	public Address()
@@ -13,10 +13,10 @@ public class Address extends Person
 		this.street = "";
 		this.city = "";
 		this.state = "";
-		this.zipCode = 0;
+		this.zipCode = "";
 	}
 	
-	public Address(String street, String city, String state, int zipCode)
+	public Address(String street, String city, String state, String zipCode)
 	{
 		this.street = street;
 		this.city = city;
@@ -40,7 +40,7 @@ public class Address extends Person
 		this.state = state;
 	}
 	
-	public void setZipCode(int zipCode)
+	public void setZipCode(String zipCode)
 	{
 		this.zipCode = zipCode;
 	}
@@ -61,7 +61,7 @@ public class Address extends Person
 		return this.state;
 	}
 	
-	public int getZipCode()
+	public String getZipCode()
 	{
 		return this.zipCode;
 	}
