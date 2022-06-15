@@ -1,7 +1,6 @@
 package phonebook;
 
-import java.util.Arrays;
-import java.util.Scanner;
+import java.util.*;
 
 public class Phonebook extends Executive
 {
@@ -57,7 +56,70 @@ public class Phonebook extends Executive
 
 	public void sortPhoneBook()
 	{
-		Arrays.sort(this.parr);
+		//Arrays.sort(this.parr);
+		int longest = 0;
+		for (int i = 0; i < this.length; i++)
+		{
+			if (this.parr[i].getFullName().length() > longest)
+			{
+				longest = this.parr[i].getFullName().length();
+			}
+		}
+		
+		int arr[][] = new int[this.length][longest];
+		//int fArr[][] = new int[this.length][longest];
+		for (int i = 0; i < this.length; i++)
+		{
+			char[] carr = this.parr[i].getFullName().toLowerCase().toCharArray();
+			for (int j = 0; j < carr.length; j++)
+			{
+				arr[i][j] = (int)carr[j];
+			}
+		}
+		
+		arr = recSort(arr, 0, 1, 0);
+		
+		for (int i = 0; i < arr.length; i++)
+		{
+			for (int j = 0; j < arr[i].length; j++)
+			{
+				System.out.print(arr[i][j] + " ");
+			}
+			System.out.println();
+		}
+		
+		/*
+		
+		for (int i = 0; i < this.length; i++)
+		{
+			
+		}*/
+	}
+	
+	public int[][] recSort(int[][] arr, int i, int j, int k)
+	{
+		System.out.println(i + " " + j + " " + k);
+		if (i + 1 == arr.length)
+		{
+			return arr;
+		}
+		else if (arr[j][k] < arr[i][k])
+		{
+			int[] temp = arr[i];
+			arr[i] = arr[j];
+			arr[j] = temp;
+			return recSort(arr, i, ++j, 0);
+		}
+		else if (arr[i + 1][j] == arr[i][j])
+		{
+			return recSort(arr, i, j, ++k);
+		}
+		else
+		{
+			return recSort(arr, ++i, 0, 0);
+		}
+		
+		//return arr;
 	}
 	
 	public void updateEntry(String phoneNumber, Scanner in)

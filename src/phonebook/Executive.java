@@ -96,10 +96,10 @@ public class Executive
 	public static void printAscending()
 	{
 		t1.sortPhoneBook();
-		for (int i = 0; i < t1.getLength(); i++)
+		/*for (int i = 0; i < t1.getLength(); i++)
 		{
 			System.out.println(t1.getEntry(i));
-		}
+		}*/
 	}
 	
 	public static void search(Scanner in)
