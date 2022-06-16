@@ -9,7 +9,6 @@ public class Person extends Phonebook
 	private String phoneNumber;
 	private Address adr;
 	
-//	CONSTRUCTORS
 	public Person() 
 	{
 		this.firstName = "";
@@ -18,15 +17,6 @@ public class Person extends Phonebook
 		this.adr = null;
 	}
 	
-	/*public Person(String firstName, String lastName, String phoneNumber, String street, String city, String state, String zipCode)
-	{
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.phoneNumber = phoneNumber;
-		this.adr = new Address(street, city, state, zipCode);
-	}*/
-	
-//	SETTERS
 	public void setFirstName(String firstName)
 	{
 		this.firstName = firstName;
@@ -45,7 +35,6 @@ public class Person extends Phonebook
 	public void setAddress(Scanner in)
 	{
 		Address ad = new Address();
-		//in.nextLine();
 		
 		System.out.println("enter street : ");
 			ad.setStreet(in.nextLine());
@@ -58,13 +47,6 @@ public class Person extends Phonebook
 		this.adr = ad;
 	}
 	
-	/*public void setAddress(String street, String city, String state, int zipCode)
-	{
-		Address t = new Address(street, city, state, zipCode);
-		this.adr = t;
-	}*/
-	
-//	GETTERS
 	public String getFirstName()
 	{
 		return this.firstName;
@@ -90,7 +72,6 @@ public class Person extends Phonebook
 		return this.adr;
 	}
 	
-//	TO STRING
 	@Override
 	public String toString()
 	{
